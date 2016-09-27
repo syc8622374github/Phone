@@ -23,4 +23,9 @@ public interface IDelegate {
     View getRootView();
     //获取menuId
     int getOptionsMenuId();
+
+    /**
+     * 指定拥有加载过程的View
+     */
+    View getLoadingTargetView();
 }

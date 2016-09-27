@@ -47,6 +47,7 @@ public abstract class AppDelegate implements IDelegate {
         return rootView;
     }
 
+
     @Override
     public int getOptionsMenuId() {
         return 0;
@@ -65,6 +66,10 @@ public abstract class AppDelegate implements IDelegate {
             mViews.put(id,view);
         }
         return view;
+    }
+
+    @Override public View getLoadingTargetView() {
+        return null;
     }
 
     /*---------开放方法-----------*/

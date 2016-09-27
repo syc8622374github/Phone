@@ -6,8 +6,12 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.View;
 
+import phone.demo.com.library.R;
+import phone.demo.com.library.util.varyview.VaryViewHelper;
 import phone.demo.com.library.view.AppDelegate;
 
 /**
@@ -22,6 +26,8 @@ public abstract class ActivityPresenter<T extends AppDelegate> extends AppCompat
     protected Handler handler = new Handler(getMainLooper());
     private Toolbar toolbar;
     private static boolean isShowToolbar = true;
+    //加载数据流转控制器
+    private VaryViewHelper varyViewHelper;
 
     /**
      * 初始化视图实体类
@@ -44,6 +50,62 @@ public abstract class ActivityPresenter<T extends AppDelegate> extends AppCompat
         setContentView(viewDelegate.getRootView());
         viewDelegate.initWidget();
         initToolbar();
+
+        if (viewDelegate.getLoadingTargetView() != null) {
+            varyViewHelper = new VaryViewHelper.Builder()
+                    .setDataView(viewDelegate.getLoadingTargetView())
+                    .setLoadingView(LayoutInflater.from(context).inflate(R.layout.layout_loadingview, null))
+                    .setEmptyView(LayoutInflater.from(context).inflate(R.layout.layout_emptyview, null))
+                    .setErrorView(LayoutInflater.from(context).inflate(R.layout.layout_errorview, null))
+                    .setRefreshListener(new View.OnClickListener() {
+                        @Override public void onClick(View v) {
+                            onRetryListener();
+                        }
+                    })
+                    .build();
+        }
+
+        Bundle extras = getIntent().getExtras();
+
+        if (null != extras) {
+            getBundleExtras(extras);
+        }
+    }
+
+    /**
+     * 当应用被回收后重新启动应用需要重新初始化下视图代理器
+     * @param savedInstanceState
+     */
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (viewDelegate == null) {
+            try {
+                viewDelegate = getDelegateClass().newInstance();
+            } catch (InstantiationException e) {
+                throw new RuntimeException("create IDelegate error");
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException("create IDelegate error");
+            }
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (viewDelegate.getOptionsMenuId() != 0) {
+            getMenuInflater().inflate(viewDelegate.getOptionsMenuId(), menu);
+        }
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    /**
+     * activity生命周期销毁所做操作
+     * 1.清空handler队列
+     */
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        handler.removeCallbacksAndMessages(null);
     }
 
     /**
@@ -89,5 +151,13 @@ public abstract class ActivityPresenter<T extends AppDelegate> extends AppCompat
      * only Iconify use
      */
     protected void onUseIconifySetMenuItem(Menu menu) {
+    }
+
+    /**
+     * 如果有设置loadingView，加载失败时重试点击的回调
+     *
+     * @see phone.demo.com.library.view.IDelegate #getLoadingTargetView()
+     */
+    protected void onRetryListener() {
     }
 }
