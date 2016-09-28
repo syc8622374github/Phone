@@ -53,6 +53,16 @@ public abstract class AppDelegate implements IDelegate {
         return 0;
     }
 
+    @Override
+    public void onDestroy() {
+
+    }
+
+    @Override
+    public void initData() {
+
+    }
+
     /**
      * 视图管理
      * @param id
@@ -73,6 +83,6 @@ public abstract class AppDelegate implements IDelegate {
     }
 
     /*---------开放方法-----------*/
-    //获取layout资源文件id
-    protected abstract int getRootLayoutId();
+    /*//获取layout资源文件id
+    public abstract int getRootLayoutId();*/
 }

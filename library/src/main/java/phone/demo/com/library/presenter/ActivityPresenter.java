@@ -3,6 +3,7 @@ package phone.demo.com.library.presenter;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -12,7 +13,7 @@ import android.view.View;
 
 import phone.demo.com.library.R;
 import phone.demo.com.library.util.varyview.VaryViewHelper;
-import phone.demo.com.library.view.AppDelegate;
+import phone.demo.com.library.view.IDelegate;
 
 /**
  * @author cyc
@@ -20,14 +21,14 @@ import phone.demo.com.library.view.AppDelegate;
  * @description presenter 基类
  * @date 2016/9/27 0027
  */
-public abstract class ActivityPresenter<T extends AppDelegate> extends AppCompatActivity {
+public abstract class ActivityPresenter<T extends IDelegate> extends AppCompatActivity {
     protected T viewDelegate;
     protected Context context;
-    protected Handler handler = new Handler(getMainLooper());
-    private Toolbar toolbar;
-    private static boolean isShowToolbar = true;
+    protected Handler handler = new Handler(Looper.getMainLooper());
+    protected Toolbar toolbar;
     //加载数据流转控制器
-    private VaryViewHelper varyViewHelper;
+    protected VaryViewHelper varyViewHelper;
+    private static boolean isShowToolbar = true;
 
     /**
      * 初始化视图实体类
@@ -49,6 +50,7 @@ public abstract class ActivityPresenter<T extends AppDelegate> extends AppCompat
         viewDelegate.create(getLayoutInflater(),null,savedInstanceState);
         setContentView(viewDelegate.getRootView());
         viewDelegate.initWidget();
+        viewDelegate.initData();
         initToolbar();
 
         if (viewDelegate.getLoadingTargetView() != null) {
@@ -101,10 +103,15 @@ public abstract class ActivityPresenter<T extends AppDelegate> extends AppCompat
     /**
      * activity生命周期销毁所做操作
      * 1.清空handler队列
+     * 2.释放数据流转控制器资源
+     * 3.释放视图代理层支援
      */
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (viewDelegate.getLoadingTargetView() != null) varyViewHelper.releaseVaryView();
+        viewDelegate.onDestroy();
+        viewDelegate = null;
         handler.removeCallbacksAndMessages(null);
     }
 

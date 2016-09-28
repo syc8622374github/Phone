@@ -23,6 +23,18 @@ public interface IDelegate {
     View getRootView();
     //获取menuId
     int getOptionsMenuId();
+    //获取layout资源文件id
+    int getRootLayoutId();
+
+    /**
+     * 初始化数据
+     */
+    void initData();
+
+    /**
+     * 生命周期结束
+     */
+    void onDestroy();
 
     /**
      * 指定拥有加载过程的View
