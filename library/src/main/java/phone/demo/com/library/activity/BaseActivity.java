@@ -3,11 +3,8 @@ package phone.demo.com.library.activity;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.WindowManager;
 
-import phone.demo.com.library.R;
 import phone.demo.com.library.presenter.ActivityPresenter;
 import phone.demo.com.library.view.IDelegate;
 
@@ -32,7 +29,7 @@ public abstract class BaseActivity<T extends IDelegate> extends ActivityPresente
         }
     }
 
-    @Override
+    /*@Override
     protected void initToolbar() {
         if (getToolbarAvailable()) {
             toolbar = viewDelegate.getToolbar();
@@ -44,9 +41,9 @@ public abstract class BaseActivity<T extends IDelegate> extends ActivityPresente
             if (toolbar != null)
                 setSupportActionBar(toolbar);
         }
-    }
+    }*/
 
     public String getToolBarTitle() {
-        return null;
+        return "hahaha";
     }
 }

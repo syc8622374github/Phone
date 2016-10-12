@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import phone.demo.com.library.R;
+
 /**
  * @author cyc
  * @name phone.demo.com.library.view
@@ -34,7 +36,7 @@ public abstract class AppDelegate implements IDelegate {
 
     @Override
     public Toolbar getToolbar() {
-        return null;
+        return get(R.id.toolbar);
     }
 
     @Override

@@ -121,7 +121,7 @@ public abstract class ActivityPresenter<T extends IDelegate> extends AppCompatAc
     protected void initToolbar(){
         if(getToolbarAvailable()){
             toolbar = viewDelegate.getToolbar();
-            if(toolbar!=null){
+            if(toolbar!=null&&getToolbarAvailable()){
                 setSupportActionBar(toolbar);
             }
         }
