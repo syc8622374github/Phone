@@ -31,7 +31,7 @@ public class MainDelegate extends AppDelegate {
     public void initWidget() {
         textView = get(R.id.textView);
         mTabLayout = get(R.id.tabLayout);
-        viewpager = get(R.id.pager);
+        //viewpager = get(R.id.pager);
         //all pagers
         titles = getRootView().getContext().getResources().getStringArray(R.array.images_category_list_id);
         /*frgs = new Fragment[titles.length];
